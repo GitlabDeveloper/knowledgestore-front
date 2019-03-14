@@ -15,5 +15,5 @@ test:
 test-sonar:
   stage: test
   script:
-    - mvn --batch-mode verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.6.0.1398:sonar -Dsonar.projectKey=GitlabDeveloper_knowledgestore-front -Dsonar.organization=gitlabdeveloper-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=ec8b6fc545a9584954910aeb45f4162bec0f5c6a
+    - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=GitlabDeveloper_knowledgestore-front -Dsonar.organization=gitlabdeveloper-github -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=ec8b6fc545a9584954910aeb45f4162bec0f5c6a
     
