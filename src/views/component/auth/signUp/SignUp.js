@@ -1,10 +1,8 @@
 import React, {Component} from "react";
-import {checkEmailAvailability, checkUsernameAvailability} from "../../../../utils/APIUtils";
 import {Button, FormControl, FormLabel, Input, InputAdornment, IconButton, InputLabel, Paper} from "@material-ui/core";
 import {Visibility, VisibilityOff} from "@material-ui/icons";
 import {withSnackbar} from "notistack";
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux'
 import {
     EMAIL_MAX_LENGTH,
     NAME_MAX_LENGTH,
@@ -14,7 +12,7 @@ import {
     USERNAME_MAX_LENGTH,
     USERNAME_MIN_LENGTH
 } from '../../../../constants/index';
-import {signUpAction} from "../../../../store/signUp/actions";
+import {signUp, checkEmailAvailability, checkUsernameAvailability} from "../../../../store/signUp/actions";
 
 class SignUp extends Component {
 
@@ -55,13 +53,16 @@ class SignUp extends Component {
             username: this.state.username.value,
             password: this.state.password.value
         };
-        this.props.onSignUp(signUpRequest)
-            .then(() => {
-                this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
-                this.props.history.push("/login");
+        signUp(signUpRequest)
+            .then(response => {
+                if(response.success) {
+                    this.props.enqueueSnackbar(response.message, {variant: 'success'});
+                    this.props.history.push("/login");
+                }
             })
-            .catch(() => {
-                this.props.enqueueSnackbar(this.props.message, {variant: 'error'});
+            .catch((error) => {
+                const message = error.status === 400 ? error.message : "Sorry! Something went wrong. Please try again!";
+                this.props.enqueueSnackbar(message, {variant: 'error'});
             });
     };
 
@@ -248,7 +249,6 @@ class SignUp extends Component {
             });
             return;
         }
-//todo перенести в actions
         checkUsernameAvailability(usernameValue)
             .then(response => {
                 if (response.available) {
@@ -294,7 +294,6 @@ class SignUp extends Component {
             });
             return;
         }
-//todo перенести в actions
         checkEmailAvailability(emailValue)
             .then(response => {
                 if (response.available) {
@@ -346,16 +345,4 @@ class SignUp extends Component {
     };
 }
 
-const mapStateToProps = (state) => {
-    return {
-        isLoading: state.signUpReducer.isLoading,
-        isLoaded: state.signUpReducer.isLoaded,
-        message: state.signUpReducer.message
-    }
-};
-
-const mapDispatchToProps = dispatch => ({
-    onSignUp: signUpRequest => dispatch(signUpAction(signUpRequest))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withSnackbar(SignUp))
+export default (withSnackbar(SignUp))

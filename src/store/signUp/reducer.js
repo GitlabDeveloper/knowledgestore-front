@@ -1,3 +1,4 @@
+/*
 import {handleActions} from 'redux-actions';
 
 const defaultState = {
@@ -11,8 +12,8 @@ const signUpReducer = handleActions(
         SIGN_UP_START: (state) => {
             return {...state, isLoading: true, isLoaded: false};
         },
-        SIGN_UP_SUCCESS: (state, action) => {
-            return {...state, isLoading: false, isLoaded: true, message: action.payload.message};
+        SIGN_UP_SUCCESS: (state) => {
+            return {...state, isLoading: false, isLoaded: true};
         },
         SIGN_UP_FAILED: (state, action) => {
             return {...state, isLoading: false, isLoaded: false, message: action.payload.message};
@@ -21,4 +22,4 @@ const signUpReducer = handleActions(
     defaultState
 );
 
-export default signUpReducer;
+export default signUpReducer;*/

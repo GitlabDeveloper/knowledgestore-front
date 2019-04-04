@@ -54,7 +54,6 @@ export const getCurrentUserAction = () => dispatch => {
         method: 'GET'
     })
         .then(response => {
-            dispatch(loginSuccess());
             dispatch(getUserSuccess(response));
         })
         .catch(() => {

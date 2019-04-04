@@ -19,14 +19,11 @@ class Login extends React.Component {
 
         this.props.onLogin(loginRequest)
             .then(() => {
-                if (!this.props.isLoading && this.props.isAuthenticated) {
-                    this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
-                    this.props.getCurrentUser();
-                } else {
-                    this.props.enqueueSnackbar(this.props.message, {variant: 'error'});
-                }
+                this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
+                this.props.getCurrentUser();
+                this.props.history.push("/");
             })
-            .catch(() =>{
+            .catch(() => {
                 this.props.enqueueSnackbar("Sorry! Something went wrong. Please try again!", {variant: 'error'});
             })
     };
@@ -85,7 +82,6 @@ class Login extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isLoading: state.authReducer.isLoading,
-        isAuthenticated: state.authReducer.isAuthenticated,
         message: state.authReducer.message
     }
 };
