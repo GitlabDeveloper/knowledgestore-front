@@ -16,7 +16,6 @@ class AppRouter extends React.Component {
     componentDidMount() {
         this.props.getCurrentUser()
             .then(() => {
-                console.log(this.props);
                 if (this.props.currentUser) {
                     this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
                 }
@@ -25,6 +24,7 @@ class AppRouter extends React.Component {
                 this.props.enqueueSnackbar("Not authorized", {variant: 'warning'});
             });
     }
+
     /*todo если авторизован, должно редиректить на другую страницу*/
     render() {
         return (

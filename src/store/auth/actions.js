@@ -47,6 +47,7 @@ export const logoutAction = () => dispatch => {
 export const getCurrentUserAction = () => dispatch => {
     dispatch(getUserStart());
     if (!sessionStorage.getItem(ACCESS_TOKEN) && !localStorage.getItem(ACCESS_TOKEN)) {
+        dispatch(getUserFailed());
         return Promise.reject();
     }
     return request({
