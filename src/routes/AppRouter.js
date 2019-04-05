@@ -13,10 +13,11 @@ import PrivateRoute from "../component/PrivateRoute";
 
 class AppRouter extends React.Component {
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.getCurrentUser()
             .then(() => {
-                if (this.props.currentUser && !this.props.isLoading) {
+                console.log(this.props);
+                if (this.props.currentUser) {
                     this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
                 }
             })
@@ -49,7 +50,9 @@ class AppRouter extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        isAuthenticated: state.authReducer.isAuthenticated
+        isAuthenticated: state.authReducer.isAuthenticated,
+        message: state.authReducer.message,
+        currentUser: state.authReducer.currentUser
     }
 };
 
