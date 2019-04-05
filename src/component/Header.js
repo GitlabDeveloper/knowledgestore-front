@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button} from "@material-ui/core";
-import {logoutAction} from "../../store/auth/actions";
+import {logoutAction} from "../store/auth/actions";
 import connect from "react-redux/es/connect/connect";
 import {withSnackbar} from "notistack";
 import {Link} from "react-router-dom";

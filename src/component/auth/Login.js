@@ -3,7 +3,7 @@ import {withSnackbar} from 'notistack';
 import {Button, Checkbox, FormControl, FormControlLabel, Input, InputLabel, Paper} from '@material-ui/core';
 import {connect} from 'react-redux'
 import {Link} from "react-router-dom";
-import {getCurrentUserAction, loginAction} from "../../../../store/auth/actions";
+import {getCurrentUserAction, loginAction} from "../../store/auth/actions";
 
 class Login extends React.Component {
 

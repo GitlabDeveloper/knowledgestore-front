@@ -11,8 +11,8 @@ import {
     PASSWORD_MIN_LENGTH,
     USERNAME_MAX_LENGTH,
     USERNAME_MIN_LENGTH
-} from '../../../../constants/index';
-import {signUp, checkEmailAvailability, checkUsernameAvailability} from "../../../../store/signUp/actions";
+} from '../../constants/index';
+import {signUp, checkEmailAvailability, checkUsernameAvailability} from "../../store/signUp/actions";
 
 class SignUp extends Component {
 
