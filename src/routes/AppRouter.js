@@ -10,10 +10,12 @@ import {getCurrentUserAction} from "../store/auth/actions";
 import connect from "react-redux/es/connect/connect";
 import {withSnackbar} from "notistack";
 import PrivateRoute from "../component/PrivateRoute";
+import AuthRoute from "../component/AuthRoute";
+import {CircularProgress} from '@material-ui/core';
 
 class AppRouter extends React.Component {
 
-    componentDidMount() {
+    onGetCurrentUser = () => {
         this.props.getCurrentUser()
             .then(() => {
                 if (this.props.currentUser) {
@@ -23,25 +25,37 @@ class AppRouter extends React.Component {
             .catch(() => {
                 this.props.enqueueSnackbar("Not authorized", {variant: 'warning'});
             });
+    };
+
+    componentDidMount() {
+        this.onGetCurrentUser();
     }
 
-    /*todo если авторизован, должно редиректить на другую страницу*/
     render() {
         return (
             <Router history={browserHistory}>
                 <div className='container'>
                     <Header/>
-                    <Switch>
-                        <Route path="/login" component={Login}/>
-                        <Route path="/signUp" component={SignUp}/>
-                        {/*приватный роутер, сюда вставлять любые компоненты, которые не должны быть доступны без авторизацтт*/}
-                        <PrivateRoute
-                            authenticated={this.props.isAuthenticated}
-                            path="/myPage"
-                            component={undefined}
-                        />
-                        <Route component={NotFound}/>
-                    </Switch>
+                    {this.props.isLoading ? (
+                        <CircularProgress color="primary"/>
+                    ) : (
+                        <Switch>
+                            <AuthRoute
+                                authenticated={this.props.isAuthenticated}
+                                path="/login"
+                                component={Login}
+                                onGetCurrentUser={this.onGetCurrentUser}
+                            />
+                            <AuthRoute authenticated={this.props.isAuthenticated} path="/signUp" component={SignUp}/>
+
+                            <PrivateRoute
+                                authenticated={this.props.isAuthenticated}
+                                path="/myPage"
+                                component={undefined}
+                            />
+                            <Route component={NotFound}/>
+                        </Switch>
+                    )}
                 </div>
             </Router>
         )
@@ -51,6 +65,7 @@ class AppRouter extends React.Component {
 const mapStateToProps = (state) => {
     return {
         isAuthenticated: state.authReducer.isAuthenticated,
+        isLoading: state.authReducer.isLoading,
         message: state.authReducer.message,
         currentUser: state.authReducer.currentUser
     }
