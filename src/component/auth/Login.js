@@ -19,9 +19,7 @@ class Login extends React.Component {
 
         this.props.onLogin(loginRequest)
             .then(() => {
-                this.props.enqueueSnackbar(this.props.message, {variant: 'success'});
-                this.props.getCurrentUser();
-                this.props.history.push("/");
+                this.props.onGetCurrentUser();
             })
             .catch(() => {
                 this.props.enqueueSnackbar("Sorry! Something went wrong. Please try again!", {variant: 'error'});
