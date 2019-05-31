@@ -1,19 +1,27 @@
+variables:
+  PUBLIC_URL: /knowledgestore
+  
+cache:
+  paths:
+  - node_modules
+
 stages:
   - build
-  - test
   
-build:
+deploy:
   stage: build
   script:
     - echo "build"
 
-test:
-  stage: test
+pages:
+  stage: deploy
   script:
-    - echo "test"
-    
-test-sonar:
-  stage: test
-  script:
-    - /opt/sonar-scanner/bin/sonar-scanner -Dsonar.projectKey=GitlabDeveloper_knowledgestore-front -Dsonar.organization=gitlabdeveloper-github -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=ec8b6fc545a9584954910aeb45f4162bec0f5c6a
-    
+    - npm install # Install all dependencies
+    - npm run build --prod # Build for prod
+    - mv public _public # CRA and gitlab pages both use the public folder. Only do this in a build pipeline.
+    - mv build public # Move build files to public dir for Gitlab Pages
+  artifacts:
+    paths:
+    - public # The built files for Gitlab Pages to serve
+  only:
+    - master # Only run on master branch
