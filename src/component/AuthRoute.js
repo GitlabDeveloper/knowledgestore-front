@@ -8,7 +8,7 @@ const AuthRoute = ({ component: Component, authenticated, ...rest }) => (
             authenticated ? (
                 <Redirect
                     to={{
-                        pathname: '/',
+                        pathname: rest.location.state.from.pathname,
                         state: { from: props.location }
                     }}
                 />
@@ -19,4 +19,4 @@ const AuthRoute = ({ component: Component, authenticated, ...rest }) => (
     />
 );
 
-export default AuthRoute
+export default AuthRoute;

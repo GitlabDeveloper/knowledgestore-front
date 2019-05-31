@@ -1,19 +1,21 @@
-import React from 'react';
-import {BrowserRouter as Router} from 'react-router-dom';
-import {Route, Switch} from 'react-router';
-import Header from "../component/Header";
-import NotFound from "../component/NotFound";
-import browserHistory from "../store/browserHistory";
-import Login from "../component/auth/Login";
-import SignUp from "../component/signUp/SignUp";
-import {getCurrentUserAction} from "../store/auth/actions";
-import connect from "react-redux/es/connect/connect";
-import {withSnackbar} from "notistack";
-import PrivateRoute from "../component/PrivateRoute";
-import AuthRoute from "../component/AuthRoute";
-import {CircularProgress} from '@material-ui/core';
+import React, { Component } from 'react';
+import { Router } from 'react-router-dom';
+import { Route, Switch } from 'react-router';
+import Header from '../component/Header';
+import NotFound from '../component/NotFound';
+import browserHistory from '../store/browserHistory';
+import Login from '../component/auth/Login';
+import SignUp from '../component/signUp/SignUp';
+import Quiz from '../component/quiz/Quiz';
+import { getCurrentUserAction } from '../store/auth/actions';
+import connect from 'react-redux/es/connect/connect';
+import { withSnackbar } from 'notistack';
+import PrivateRoute from '../component/PrivateRoute';
+import AuthRoute from '../component/AuthRoute';
+import { CircularProgress } from '@material-ui/core';
+import TeacherPage from '../component/teachear-page';
 
-class AppRouter extends React.Component {
+class AppRouter extends Component {
 
     onGetCurrentUser = () => {
         this.props.getCurrentUser()
@@ -46,7 +48,24 @@ class AppRouter extends React.Component {
                                 component={Login}
                                 onGetCurrentUser={this.onGetCurrentUser}
                             />
-                            <AuthRoute authenticated={this.props.isAuthenticated} path="/signUp" component={SignUp}/>
+
+                            <AuthRoute
+                                authenticated={this.props.isAuthenticated}
+                                path="/signUp"
+                                component={SignUp}
+                            />
+
+                            <PrivateRoute
+                                authenticated={this.props.isAuthenticated}
+                                path="/teacher-page"
+                                component={TeacherPage}
+                            />
+
+                            <PrivateRoute
+                                authenticated={this.props.isAuthenticated}
+                                path="/quiz/:id"
+                                component={Quiz}
+                            />
 
                             <PrivateRoute
                                 authenticated={this.props.isAuthenticated}
