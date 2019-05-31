@@ -13,7 +13,7 @@ import { withSnackbar } from 'notistack';
 import PrivateRoute from '../component/PrivateRoute';
 import AuthRoute from '../component/AuthRoute';
 import { CircularProgress } from '@material-ui/core';
-import TeacherPage from '../component/teachear-page';
+import TeacherPage from "../component/teacherPage/teacherPage";
 
 class AppRouter extends Component {
 
