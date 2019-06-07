@@ -13,9 +13,13 @@ const RadioButtonDetails = ({ questionOptions, allQuizOptions, valueChange }) =>
         >
             {
                 questionOptions.map(option => {
-                    const { id, text } = option;
+                    const { id, text, correct } = option;
+                    const buttonStyle = correct !== null ?
+                        correct ? { background:  "#affda0" } : { background:  "#f04848" }
+                    : {};
                     return (
                         <FormControlLabel
+                            style={buttonStyle}
                             key={id}
                             value={`${id}`}
                             control={<Radio onChange={valueChange(id, checkedValue)}/>}

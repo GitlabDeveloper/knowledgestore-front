@@ -7,13 +7,13 @@ import {Button} from "@material-ui/core";
 class Quiz extends Component {
 
     state = {
-        questionId: null,
+        question: null,
         quizAnswers: [],
         quiz: {},
     };
 
-    onItemSelected = (questionId) => {
-        this.setState({ questionId })
+    onItemSelected = (question) => {
+        this.setState({ question })
     };
 
     componentDidMount() {
@@ -22,7 +22,7 @@ class Quiz extends Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.match.params.id !== prevProps.match.params.id){
-            this.setState({ questionId: null, quizAnswers: [], quiz: {} });
+            this.setState({ question: null, quizAnswers: [], quiz: {} });
             this.updateItem();
         }
     }
@@ -35,27 +35,27 @@ class Quiz extends Component {
     updateItem() {
         getQuizById(this.extractId(this.props))
             .then(response => {
-                this.setState({quiz: response})
+                this.setState({ quiz: response })
             }).catch(() => {
             this.setState({
-                questionId: null,
+                question: null,
                 quiz: {}
             });
         });
     }
 
     nextQuestion = () => {
-        const { questionId } = this.state;
+        const { question } = this.state;
         const { questions } = this.state.quiz;
-        const questionIdIndex = questions.findIndex(question => question.id === questionId);
-        this.setState( { questionId : questions[questionIdIndex + 1].id })
+        const questionIdIndex = questions.findIndex(q => q === question);
+        this.setState( { question : questions[questionIdIndex + 1] })
     };
 
     prevQuestion = () => {
-        const { questionId } = this.state;
+        const { question } = this.state;
         const { questions } = this.state.quiz;
-        const questionIdIndex = questions.findIndex(question => question.id === questionId);
-        this.setState( { questionId : questions[questionIdIndex - 1].id })
+        const questionIdIndex = questions.findIndex(q => q === question);
+        this.setState( { question : questions[questionIdIndex - 1] })
     };
 
     check = () => {
@@ -67,7 +67,11 @@ class Quiz extends Component {
         };
         checkAnswers(quizDataForCheck)
             .then(response => {
-                alert(response.name);
+                const sameQuestion = response.quizDTO.questions.find(question =>
+                    question.id === this.state.question.id
+                );
+                this.setState({ quiz: response.quizDTO, question: sameQuestion });
+                alert(response.quizResult);
             })
     };
 
@@ -76,27 +80,27 @@ class Quiz extends Component {
     };
 
     render() {
-        const { questions } = this.state.quiz;
-        const { questionId } = this.state;
+        const { quizId, questions } = this.state.quiz;
+        const { question } = this.state;
 
-        const firstElemId = questions ? questions[0].id : null;
-        const lastElemId = questions ? questions[questions.length - 1].id : null;
+        const firstElem = questions ? questions[0] : null;
+        const lastElem = questions ? questions[questions.length - 1] : null;
 
         return (
             <div style={{ width: "90%", marginLeft: "5%", marginTop: "20px" }}>
                 <QuestionList
                     questions={questions}
-                    questionId={questionId}
+                    question={question}
+                    quizId={quizId}
                     answeredQuestions={this.state.quizAnswers}
                     onItemSelected={this.onItemSelected} />
                 <QuestionDetails
-                    questions={questions}
-                    questionId={questionId}
+                    question={question}
                     getDataFromDetails={this.getDataFromDetails} />
                 <div style={{ display: "flex", marginTop: "20px" }}>
                     {
-                        questionId ?
-                            firstElemId === questionId ?
+                        question ?
+                            firstElem === question ?
                                 null :
                                 <Button
                                     variant="contained"
@@ -108,8 +112,8 @@ class Quiz extends Component {
                             : null
                     }
                     {
-                        questionId ?
-                            lastElemId === questionId ?
+                        question ?
+                            lastElem === question ?
                                 null :
                                 <Button
                                     style={{ marginLeft: "auto" }}
@@ -123,7 +127,7 @@ class Quiz extends Component {
                     }
                 </div>
                 {
-                    questionId ?
+                    question ?
                         <Button
                             style={{ display: "flex", marginLeft: "auto", marginTop: "20px",
                                 background: 'linear-gradient(45deg, #3f51b5 25%, #ef2257 75%)'}}

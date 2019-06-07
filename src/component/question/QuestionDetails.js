@@ -22,23 +22,19 @@ class QuestionDetails extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { questionId : newQuestionId } = this.props;
-        const { questionId : prevQuestionId } = prevProps;
+        const { question : newQuestion } = this.props;
+        const { question : prevQuestion } = prevProps;
 
-        if (newQuestionId !== prevQuestionId) {
+        if (newQuestion !== prevQuestion) {
             this.updateItem();
         }
-        if (newQuestionId === null && prevQuestionId !== null) {
+        if (newQuestion === null && prevQuestion !== null) {
             this.setState({ question: null, allQuizOptions: [] })
         }
     }
 
     updateItem() {
-        const { questions, questionId } = this.props;
-        if (!questionId) {
-            return;
-        }
-        const question = questions.find(o => o.id === questionId);
+        const { question } = this.props;
         this.setState({ question });
     }
 
@@ -87,7 +83,7 @@ class QuestionDetails extends Component {
             return <span>Select question</span>;
         }
 
-        const { category, text, type, questionOptions } = question;
+        const { category, text, type, questionOptions, explanation } = question;
 
         return (
             <Paper style={{ textAlign: "center" }}>
@@ -105,6 +101,7 @@ class QuestionDetails extends Component {
                             allQuizOptions={allQuizOptions}
                             valueChange={this.checkBoxValueChange}/>
                 }
+                <h5 style={{ marginTop: "20px" }}>{explanation}</h5>
             </Paper>
         );
     }
