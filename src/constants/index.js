@@ -1,4 +1,5 @@
-export const API_BASE_URL = 'http://localhost:5000/api';
+// export const API_BASE_URL = 'http://localhost:5000/api';
+export const API_BASE_URL = 'http://li1397-182.members.linode.com:5000/api';
 export const ACCESS_TOKEN = 'accessToken';
 
 export const NAME_MIN_LENGTH = 4;
