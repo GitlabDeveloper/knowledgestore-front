@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { FormGroup, FormControlLabel, Checkbox, RadioGroup, Radio } from '@material-ui/core';
+import {Paper} from '@material-ui/core';
+import RadioButtonDetails from './RadioButtonDetails';
+import CheckBoxDetails from './CheckBoxDetails';
 
 class QuestionDetails extends Component {
 
     state = {
         question: null,
-        quizOptions: []
+        allQuizOptions: []
     };
 
     createOptionItem(id, value) {
@@ -20,63 +22,66 @@ class QuestionDetails extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { itemId : newItemId, getDataFromDetails } = this.props;
-        const { itemId : prevItemId } = prevProps;
+        const { questionId : newQuestionId } = this.props;
+        const { questionId : prevQuestionId } = prevProps;
 
-        if (newItemId !== prevItemId) {
+        if (newQuestionId !== prevQuestionId) {
             this.updateItem();
         }
-        if (newItemId === null && prevItemId !== null) {
-            this.setState({ question: null, quizOptions: [] })
+        if (newQuestionId === null && prevQuestionId !== null) {
+            this.setState({ question: null, allQuizOptions: [] })
         }
-        getDataFromDetails(this.state.quizOptions);
     }
 
     updateItem() {
-        const { questions, itemId } = this.props;
-        if (!itemId) {
+        const { questions, questionId } = this.props;
+        if (!questionId) {
             return;
         }
-        const question = questions.find(o => o.id === itemId);
+        const question = questions.find(o => o.id === questionId);
         this.setState({ question });
     }
 
     checkBoxValueChange = id => event => {
-        const { quizOptions } = this.state;
+        const { getDataFromDetails } = this.props;
+        const { allQuizOptions } = this.state;
         const { checked } = event.target;
 
-        const valIndex = quizOptions.findIndex(o => o.id === id);
+        const valIndex = allQuizOptions.findIndex(o => o.id === id);
         const newOptions = valIndex === -1 ?
             [
-                ...quizOptions,
+                ...allQuizOptions,
                 this.createOptionItem(id, checked)
             ] : [
-                ...quizOptions.slice(0, valIndex),
-                ...quizOptions.slice(valIndex + 1),
+                ...allQuizOptions.slice(0, valIndex),
+                ...allQuizOptions.slice(valIndex + 1),
                 this.createOptionItem(id, checked)
             ];
-        this.setState({quizOptions: newOptions});
+        this.setState({ allQuizOptions: newOptions });
+        getDataFromDetails(newOptions);
     };
 
     radioButtonValueChange = ( id, checkedValue ) => event => {
-        const { quizOptions } = this.state;
+        const { getDataFromDetails } = this.props;
+        const { allQuizOptions } = this.state;
         const { checked } = event.target;
 
-        const valIndex = checkedValue ? quizOptions.findIndex(o => o.id === checkedValue) : null;
+        const valIndex = checkedValue ? allQuizOptions.findIndex(o => o.id === checkedValue) : null;
         const newOptions = checkedValue ?
             [
-                ...quizOptions.slice(0, valIndex),
-                ...quizOptions.slice(valIndex + 1),
+                ...allQuizOptions.slice(0, valIndex),
+                ...allQuizOptions.slice(valIndex + 1),
                 this.createOptionItem(parseInt(id), checked)
             ] : [
-                ...quizOptions,
+                ...allQuizOptions,
                 this.createOptionItem(parseInt(id), checked)
             ];
-        this.setState({quizOptions: newOptions});
+        this.setState({ allQuizOptions: newOptions });
+        getDataFromDetails(newOptions);
     };
 
     render() {
-        const { question, quizOptions } = this.state;
+        const { question, allQuizOptions } = this.state;
 
         if (!question) {
             return <span>Select question</span>;
@@ -85,75 +90,24 @@ class QuestionDetails extends Component {
         const { category, text, type, questionOptions } = question;
 
         return (
-            <React.Fragment>
+            <Paper style={{ textAlign: "center" }}>
                 <h2>{text}</h2>
                 <h3>{category}</h3>
                 {
                     type === 'RADIO_BUTTON' ?
                         <RadioButtonDetails
                             questionOptions={questionOptions}
-                            quizOptions={quizOptions}
+                            allQuizOptions={allQuizOptions}
                             valueChange={this.radioButtonValueChange}/>
                         :
                         <CheckBoxDetails
                             questionOptions={questionOptions}
-                            quizOptions={quizOptions}
+                            allQuizOptions={allQuizOptions}
                             valueChange={this.checkBoxValueChange}/>
                 }
-            </React.Fragment>
+            </Paper>
         );
     }
 }
 
 export default QuestionDetails;
-
-const RadioButtonDetails = ({ questionOptions, quizOptions, valueChange }) => {
-
-    const value = questionOptions.find(questionOption => {
-        return quizOptions.find(o => o.id === questionOption.id && o.value)
-    });
-    const checkedValue = value ? value.id : null;
-
-    return (
-        <RadioGroup
-            value={`${checkedValue}`}
-        >
-            {
-                questionOptions.map(option => {
-                    const { id, text } = option;
-                    return (
-                        <FormControlLabel
-                            key={id}
-                            value={`${id}`}
-                            control={<Radio onChange={valueChange(id, checkedValue)}/>}
-                            label={text}
-                        />
-                    )
-                })
-            }
-        </RadioGroup>
-    )
-};
-
-const CheckBoxDetails = ({ questionOptions, quizOptions, valueChange }) => {
-    return (
-        <FormGroup>
-            {
-                questionOptions.map(questionOption => {
-                    const { id, text } = questionOption;
-
-                    const value = quizOptions.find(o => o.id === id);
-                    const checkedValue = value ? value.value : null;
-
-                    return (
-                        <FormControlLabel
-                            key={id}
-                            control={ <Checkbox checked={checkedValue} onChange={valueChange(id)}/> }
-                            label={text}
-                        />
-                    )
-                })
-            }
-        </FormGroup>
-    )
-};
