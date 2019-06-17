@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import QuestionList from '../question/QuestionList';
 import QuestionDetails from "../question/QuestionDetails";
 import { getQuizById, checkAnswers } from "../../store/quiz/actions";
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 
 class Quiz extends Component {
 

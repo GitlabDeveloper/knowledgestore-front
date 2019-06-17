@@ -16,7 +16,8 @@
     "react-scripts": "2.1.8",
     "redux": "latest",
     "redux-actions": "^2.6.5",
-    "redux-thunk": "latest"
+    "redux-thunk": "latest",
+    "webpack": "4.28.3"
   },
   "scripts": {
     "start": "react-scripts start",
